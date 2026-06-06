@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.9"
+title = "逻辑运算符"
+order = 9
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

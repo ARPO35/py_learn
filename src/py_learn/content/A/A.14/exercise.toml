@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.14"
+title = "while 循环"
+order = 14
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

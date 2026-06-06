@@ -2,5 +2,5 @@ type = "chapter"
 
 [chapter]
 id = "A"
-title = "基础语法"
+title = "Python 基础语法入门"
 order = 1

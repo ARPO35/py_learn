@@ -1,7 +1,7 @@
 type = "exercise"
 
 id = "A.2"
-title = "打印问候语"
+title = "认识变量"
 order = 2
 
 question = "q.md"

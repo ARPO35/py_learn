@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.15"
+title = "函数综合实战：质数判断"
+order = 15
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

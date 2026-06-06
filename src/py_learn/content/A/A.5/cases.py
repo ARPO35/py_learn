@@ -1,52 +1,56 @@
-# 验证用例文件：A.5 while 循环求阶乘
+# 验证用例文件：A.5 类型转换
+
 
 RUN_CASES = [
     {
-        "name": "5 的阶乘",
-        "args": (5,),
-        "expected_return": 120,
+        "name": "普通正整数",
+        "args": ("42",),
+        "kwargs": {},
+        "expected_return": "结果：52",
     },
     {
-        "name": "3 的阶乘",
-        "args": (3,),
-        "expected_return": 6,
+        "name": "零",
+        "args": ("0",),
+        "kwargs": {},
+        "expected_return": "结果：10",
     },
     {
-        "name": "0 的阶乘",
-        "args": (0,),
-        "expected_return": 1,
-    },
-    {
-        "name": "1 的阶乘",
-        "args": (1,),
-        "expected_return": 1,
+        "name": "整百数",
+        "args": ("100",),
+        "kwargs": {},
+        "expected_return": "结果：110",
     },
 ]
 
 SUBMIT_CASES = [
     {
-        "name": "6 的阶乘",
-        "args": (6,),
-        "expected_return": 720,
+        "name": "负数",
+        "args": ("-5",),
+        "kwargs": {},
+        "expected_return": "结果：5",
     },
     {
-        "name": "2 的阶乘",
-        "args": (2,),
-        "expected_return": 2,
+        "name": "大数",
+        "args": ("999990",),
+        "kwargs": {},
+        "expected_return": "结果：1000000",
     },
     {
-        "name": "4 的阶乘",
-        "args": (4,),
-        "expected_return": 24,
+        "name": "前置零",
+        "args": ("007",),
+        "kwargs": {},
+        "expected_return": "结果：17",
     },
     {
-        "name": "8 的阶乘",
-        "args": (8,),
-        "expected_return": 40320,
+        "name": "一位数",
+        "args": ("1",),
+        "kwargs": {},
+        "expected_return": "结果：11",
     },
     {
-        "name": "10 的阶乘",
-        "args": (10,),
-        "expected_return": 3628800,
+        "name": "接近边界的大数",
+        "args": ("999999990",),
+        "kwargs": {},
+        "expected_return": "结果：1000000000",
     },
 ]

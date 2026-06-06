@@ -1,7 +1,7 @@
 type = "exercise"
 
 id = "A.3"
-title = "条件判断"
+title = "数字运算"
 order = 3
 
 question = "q.md"

@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.13"
+title = "for 循环与 range"
+order = 13
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

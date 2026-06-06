@@ -1,8 +1,8 @@
-# 练习 A.6：字符串回文判断
-# 输入：一个字符串 s
-# 输出：返回 True 或 False（是否为回文）
-# 提示：使用 s.lower() 忽略大小写，s[::-1] 反转字符串
+# 练习 A.6：布尔值与比较
+# 输入：age（整数，年龄）
+# 输出：布尔值，age >= 18 返回 True，否则 False
+# 提示：return age >= 18
 
 
-def py_learn(s):
+def py_learn(age):
     pass

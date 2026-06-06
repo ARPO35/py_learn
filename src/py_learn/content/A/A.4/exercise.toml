@@ -1,7 +1,7 @@
 type = "exercise"
 
 id = "A.4"
-title = "for 循环求和"
+title = "字符串操作"
 order = 4
 
 question = "q.md"

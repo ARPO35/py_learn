@@ -1,7 +1,7 @@
 type = "exercise"
 
 id = "A.6"
-title = "字符串回文判断"
+title = "布尔值与比较"
 order = 6
 
 question = "q.md"

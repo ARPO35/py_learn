@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.12"
+title = "for 循环入门"
+order = 12
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

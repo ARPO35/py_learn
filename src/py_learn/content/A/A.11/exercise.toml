@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.11"
+title = "列表操作进阶"
+order = 11
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

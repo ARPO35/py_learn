@@ -1,57 +1,52 @@
-# 验证用例文件：A.4 for 循环求和
+# 验证用例文件：A.4 字符串操作
 
 RUN_CASES = [
     {
-        "name": "正整数求和",
-        "args": ([1, 2, 3, 4, 5],),
-        "expected_return": 15,
+        "name": "普通英文单词",
+        "args": ("Python",),
+        "expected_return": "首尾字母：Pn，长度：6",
     },
     {
-        "name": "两位数和",
-        "args": ([10, 20, 30],),
-        "expected_return": 60,
+        "name": "中文字符串",
+        "args": ("你好",),
+        "expected_return": "首尾字母：你好，长度：2",
     },
     {
-        "name": "包含负数",
-        "args": ([-5, 5, 10],),
-        "expected_return": 10,
-    },
-    {
-        "name": "单个元素",
-        "args": ([42],),
-        "expected_return": 42,
-    },
-    {
-        "name": "全零",
-        "args": ([0, 0, 0],),
-        "expected_return": 0,
+        "name": "单字符字符串",
+        "args": ("a",),
+        "expected_return": "首尾字母：aa，长度：1",
     },
 ]
 
 SUBMIT_CASES = [
     {
-        "name": "空列表",
-        "args": ([],),
-        "expected_return": 0,
+        "name": "空字符串",
+        "args": ("",),
+        "expected_return": "首尾字母：，长度：0",
     },
     {
-        "name": "全部负数",
-        "args": ([-1, -2, -3],),
-        "expected_return": -6,
+        "name": "长字符串",
+        "args": ("supercalifragilisticexpialidocious",),
+        "expected_return": "首尾字母：ss，长度：34",
     },
     {
-        "name": "大数相加",
-        "args": ([1000, 2000, 3000],),
-        "expected_return": 6000,
+        "name": "数字字符串",
+        "args": ("007",),
+        "expected_return": "首尾字母：07，长度：3",
     },
     {
-        "name": "混合正负",
-        "args": ([100, -50, 200, -100],),
-        "expected_return": 150,
+        "name": "含空格的字符串",
+        "args": ("a b",),
+        "expected_return": "首尾字母：ab，长度：3",
     },
     {
-        "name": "较长列表",
-        "args": ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10],),
-        "expected_return": 55,
+        "name": "相同字符重复",
+        "args": ("zzz",),
+        "expected_return": "首尾字母：zz，长度：3",
+    },
+    {
+        "name": "标点符号字符串",
+        "args": ("!?",),
+        "expected_return": "首尾字母：!?，长度：2",
     },
 ]

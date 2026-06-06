@@ -1,7 +1,7 @@
 type = "exercise"
 
 id = "A.1"
-title = "返回两个数之和"
+title = "你好，Python！"
 order = 1
 
 question = "q.md"
