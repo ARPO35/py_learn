@@ -62,7 +62,8 @@ def _format_params(result: CaseResult) -> list[str]:
     lines: list[str] = []
 
     for idx, arg in enumerate(result.args, 1):
-        lines.append(f"[bold]参数 {idx}[/]: [cyan]{arg!r}[/]")
+        label = result.param_names[idx - 1] if idx <= len(result.param_names) else f"参数 {idx}"
+        lines.append(f"[bold]{label}[/]: [cyan]{arg!r}[/]")
 
     for key, value in result.kwargs.items():
         lines.append(f"[bold]{key}[/]: [cyan]{value!r}[/]")

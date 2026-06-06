@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from rich.console import Console
+
 import json
 import shutil
 from pathlib import Path
@@ -23,9 +25,11 @@ class WorkspaceManager:
         self,
         snapshot_store: SnapshotStore,
         exercises: dict[str, Exercise],
+        console: Console | None = None,
     ) -> None:
         self.snapshot_store = snapshot_store
         self.exercises = exercises
+        self._console = console
 
     def get_current_exercise_id(self, workspace_path: Path) -> str | None:
         """获取当前答题目录承载的练习编号。"""
@@ -54,19 +58,22 @@ class WorkspaceManager:
         """保存当前答题进度。返回是否成功保存。"""
         current_id = self.get_current_exercise_id(workspace_path)
         if not current_id:
-            print("当前答题目录没有承载任何练习。")
+            if self._console:
+                self._console.print("[yellow]当前答题目录没有承载任何练习。[/yellow]")
             return False
 
         plignore = self._get_plignore(workspace_path)
         saved = self.snapshot_store.save(current_id, workspace_path, plignore)
-        print(f"已保存练习 {current_id} 的进度（{len(saved)} 个文件）。")
+        if self._console:
+            self._console.print(f"[green]已保存练习 {current_id} 的进度（{len(saved)} 个文件）。[/green]")
         return True
 
     def new(self, exercise_id: str, workspace_path: Path) -> None:
         """从原始练习开始。"""
         exercise = self.exercises.get(exercise_id)
         if not exercise:
-            print(f"未找到练习: {exercise_id}")
+            if self._console:
+                self._console.print(f"[red]未找到练习: {exercise_id}[/red]")
             return
 
         current_id = self.get_current_exercise_id(workspace_path)
@@ -86,13 +93,15 @@ class WorkspaceManager:
         # 保存状态
         self._save_state(workspace_path, exercise_id, exercise.source_path, manifest_files)
 
-        print(f"已切换到练习 {exercise_id}: {exercise.title}")
+        if self._console:
+            self._console.print(f"[green]已切换到练习 {exercise_id}: {exercise.title}[/green]")
 
     def resume(self, exercise_id: str, workspace_path: Path) -> None:
         """恢复练习的上一次答题进度。"""
         exercise = self.exercises.get(exercise_id)
         if not exercise:
-            print(f"未找到练习: {exercise_id}")
+            if self._console:
+                self._console.print(f"[red]未找到练习: {exercise_id}[/red]")
             return
 
         current_id = self.get_current_exercise_id(workspace_path)
@@ -113,13 +122,15 @@ class WorkspaceManager:
         if self.snapshot_store.has_snapshot(exercise_id):
             restored = self.snapshot_store.load(exercise_id, workspace_path)
             manifest_files.extend(restored)
-            print(
-                f"已恢复练习 {exercise_id}: {exercise.title}（{len(restored)} 个文件）"
-            )
+            if self._console:
+                self._console.print(
+                    f"[green]已恢复练习 {exercise_id}: {exercise.title}（{len(restored)} 个文件）[/green]"
+                )
         else:
-            print(
-                f"练习 {exercise_id}: {exercise.title} 没有保存的进度，已从原始练习开始。"
-            )
+            if self._console:
+                self._console.print(
+                    f"[yellow]练习 {exercise_id}: {exercise.title} 没有保存的进度，已从原始练习开始。[/yellow]"
+                )
 
         # 保存状态
         self._save_state(
@@ -141,14 +152,12 @@ class WorkspaceManager:
         sorted_ids = sorted(self.exercises.keys(), key=_sort_key)
 
         if not sorted_ids:
-            print("没有找到任何练习。")
+            if self._console:
+                self._console.print("[yellow]没有找到任何练习。[/yellow]")
             return
 
         current_id = self.get_current_exercise_id(workspace_path)
 
-        # 保存当前进度
-        if current_id:
-            self.save(workspace_path)
 
         # 查找下一个
         if current_id and current_id in sorted_ids:
@@ -161,7 +170,8 @@ class WorkspaceManager:
                 else:
                     self.new(next_id, workspace_path)
             else:
-                print("已经是最后一个练习了。")
+                if self._console:
+                    self._console.print("[yellow]已经是最后一个练习了。[/yellow]")
         else:
             # 从第一个开始
             first_id = sorted_ids[0]

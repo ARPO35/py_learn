@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from rich.console import Console
+from rich.tree import Tree
+
 from ..domain.models import Chapter, Exercise
 from ..services.workspace_manager import WorkspaceManager
 
@@ -16,18 +19,19 @@ def handle(
     workspace_path: Path,
 ) -> None:
     """处理 ls 命令。"""
+    console = Console()
     chapter_arg = args.chapter
 
     if chapter_arg:
-        _list_exercises_in_chapter(chapter_arg, exercises, chapters)
+        _list_exercises_in_chapter(console, chapter_arg, exercises, chapters)
     else:
-        _list_chapters(chapters)
+        _list_chapters(console, chapters)
 
 
-def _list_chapters(chapters: dict[str, Chapter]) -> None:
+def _list_chapters(console: Console, chapters: dict[str, Chapter]) -> None:
     """列出章节树。"""
     if not chapters:
-        print("暂无任何章节。")
+        console.print("[dim]暂无任何章节。[/dim]")
         return
 
     # 构建父子关系
@@ -44,38 +48,39 @@ def _list_chapters(chapters: dict[str, Chapter]) -> None:
     roots = [ch for ch in chapters.values() if ch.parent is None]
     roots.sort(key=lambda c: c.order)
 
+    tree = Tree("[bold]章节列表[/bold]")
     for root in roots:
-        print(root.display_title())
-        _print_sub_chapters(root, chapters, children_map, indent=0)
+        root_branch = tree.add(root.display_title())
+        _add_sub_chapters(root_branch, root.id, children_map)
+
+    console.print(tree)
 
 
-def _print_sub_chapters(
-    chapter: Chapter,
-    chapters: dict[str, Chapter],
+def _add_sub_chapters(
+    branch: Tree,
+    parent_id: str,
     children_map: dict[str | None, list[Chapter]],
-    indent: int,
 ) -> None:
-    """递归打印子章节。"""
-    sub = children_map.get(chapter.id, [])
-    sub.sort(key=lambda c: c.order)
+    """递归添加子章节到 Tree 分支。"""
+    sub = children_map.get(parent_id, [])
     for child in sub:
-        prefix = "|--" if indent == 0 else "   " * indent + "|--"
-        print(f"{prefix} {child.display_title()}")
-        _print_sub_chapters(child, chapters, children_map, indent + 1)
+        child_branch = branch.add(child.display_title())
+        _add_sub_chapters(child_branch, child.id, children_map)
 
 
 def _list_exercises_in_chapter(
+    console: Console,
     chapter_id: str,
     exercises: dict[str, Exercise],
     chapters: dict[str, Chapter],
 ) -> None:
     """列出指定章节的练习。"""
     if chapter_id not in chapters:
-        print(f"未找到章节: {chapter_id}")
+        console.print(f"[red]未找到章节: {chapter_id}[/red]")
         return
 
     chapter = chapters[chapter_id]
-    print(chapter.display_title())
+    tree = Tree(chapter.display_title())
 
     # 过滤属于此章节的练习
     chapter_exercises = [
@@ -84,8 +89,9 @@ def _list_exercises_in_chapter(
     chapter_exercises.sort(key=lambda e: e.order)
 
     if not chapter_exercises:
-        print("  （该章节暂无练习）")
-        return
+        tree.add("[dim]（该章节暂无练习）[/dim]")
+    else:
+        for ex in chapter_exercises:
+            tree.add(ex.display_title())
 
-    for ex in chapter_exercises:
-        print(f"|-- {ex.display_title()}")
+    console.print(tree)

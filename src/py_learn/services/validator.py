@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 import importlib.util
+import inspect
 import io
 import sys
 import time
@@ -20,6 +21,7 @@ class CaseResult:
     passed: bool
     args: tuple = ()
     kwargs: dict = field(default_factory=dict)
+    param_names: list[str] = field(default_factory=list)
     expected_return: Any = None
     expected_stdout: str | None = None
     actual_return: Any = None
@@ -28,7 +30,6 @@ class CaseResult:
     traceback: str = ""
     failure_reasons: list[str] = field(default_factory=list)
     elapsed: float = 0.0
-
 
 @dataclass
 class ValidationReport:
@@ -94,9 +95,32 @@ def load_cases(cases_path: Path) -> tuple[list[dict], list[dict]]:
     return run_cases, submit_cases
 
 
+
+def _get_param_names(func: Any) -> list[str]:
+    """从函数签名中提取位置参数名列表。"""
+    try:
+        sig = inspect.signature(func)
+        names: list[str] = []
+        for p in sig.parameters.values():
+            if p.kind in (
+                inspect.Parameter.POSITIONAL_ONLY,
+                inspect.Parameter.POSITIONAL_OR_KEYWORD,
+            ):
+                names.append(p.name)
+            elif p.kind == inspect.Parameter.VAR_POSITIONAL:
+                names.append(p.name)
+                break
+            else:
+                break
+        return names
+    except (ValueError, TypeError):
+        return []
+
+
 def run_single_case(py_learn_func: Any, case: dict) -> CaseResult:
     """执行单个验证用例。"""
     name = case.get("name", "未命名用例")
+    param_names = _get_param_names(py_learn_func)
     args = case.get("args", ())
     kwargs = case.get("kwargs", {})
     expected_return = case.get("expected_return")
@@ -144,6 +168,7 @@ def run_single_case(py_learn_func: Any, case: dict) -> CaseResult:
         passed=passed,
         args=args,
         kwargs=kwargs,
+        param_names=param_names,
         expected_return=expected_return if "expected_return" in case else None,
         expected_stdout=expected_stdout if "expected_stdout" in case else None,
         actual_return=actual_return,

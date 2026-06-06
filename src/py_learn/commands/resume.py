@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+from rich.console import Console
+
 
 from ..domain.models import Exercise
 from ..services.workspace_manager import WorkspaceManager
@@ -18,7 +20,8 @@ def handle(
     exercise_id = args.exercise_id
 
     if exercise_id not in exercises:
-        print(f"未找到练习: {exercise_id}")
+        console = Console()
+        console.print(f"[red]未找到练习: {exercise_id}[/red]")
         return
 
     wm.resume(exercise_id, workspace_path)

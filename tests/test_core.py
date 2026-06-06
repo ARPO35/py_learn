@@ -562,15 +562,15 @@ class TestReportRenderer:
         assert "调用：py_learn(" not in output
 
     def test_positional_args_one_per_line(self):
-        """位置参数逐行列出。"""
+        """位置参数逐行列出，显示参数名而非序号。"""
         def add(a, b):
             return a + b
 
         cases = [{"name": "加法", "args": (1, 2), "expected_return": 3}]
         output = self._render_report(cases, add)
 
-        assert "参数 1" in output
-        assert "参数 2" in output
+        assert "a" in output
+        assert "b" in output
 
     def test_keyword_args_displayed(self):
         """关键字参数应展示参数名和值。"""
@@ -713,13 +713,12 @@ class TestStatusCommand:
         wm.new("A.1", tmp_workspace)
 
         handle(None, wm, exercises, chapters, tmp_workspace)
-
         captured = capsys.readouterr()
         assert "当前练习: A.1" in captured.out
         assert "第一题" in captured.out
         assert "未保存" in captured.out
-        assert "[  ]" in captured.out  # A.1 未完成标记
-        assert "[  ]" in captured.out  # A.2 未完成标记
+        assert "○ 1. 第一题" in captured.out
+        assert "○ 2. 第二题" in captured.out
 
     def test_status_with_snapshot(
         self, tmp_content_dir, tmp_workspace, tmp_snapshot_dir, capsys
@@ -734,10 +733,9 @@ class TestStatusCommand:
 
         captured = capsys.readouterr()
         assert "已保存" in captured.out
-        assert "[OK] 1. 第一题" in captured.out
-        assert "[  ] 2. 第二题" in captured.out
-        assert "[1/2]" in captured.out
-
+        assert "✓ 1. 第一题" in captured.out
+        assert "○ 2. 第二题" in captured.out
+        assert "1/2" in captured.out
     def test_status_cli_no_args(self, capsys):
         """CLI status 命令正常返回。"""
         from py_learn.cli import main

@@ -6,6 +6,9 @@ import argparse
 import sys
 from pathlib import Path
 
+from rich.console import Console
+from rich.panel import Panel
+
 from .services.exercise_scanner import build_exercises
 from .services.snapshot_store import SnapshotStore
 from .services.workspace_manager import WorkspaceManager
@@ -56,6 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     """CLI 主入口。"""
+    console = Console(stderr=True)
     parser = build_parser()
     args = parser.parse_args(argv)
 
@@ -71,19 +75,19 @@ def main(argv: list[str] | None = None) -> int:
     content_dirs.extend(get_extra_content_dirs())
 
     if not content_dirs:
-        print("未找到任何内容目录。")
+        console.print("[red]未找到任何内容目录。[/]")
         return 1
 
     # 扫描练习和章节
     try:
         exercises, chapters = build_exercises(content_dirs)
     except RuntimeError as e:
-        print(f"扫描练习失败:\n{e}")
+        console.print(Panel(str(e), title="[red]扫描练习失败[/]", border_style="red"))
         return 1
 
     # 初始化管理器
     snapshot_store = SnapshotStore(get_snapshot_store_dir())
-    wm = WorkspaceManager(snapshot_store, exercises)
+    wm = WorkspaceManager(snapshot_store, exercises, console=console)
     workspace_path = Path.cwd()
 
     # 分派命令
@@ -117,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         handler()
     except Exception as e:
-        print(f"执行失败: {e}")
+        console.print(f"[red]执行失败:[/] {e}")
         return 1
 
     return 0
