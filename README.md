@@ -4,18 +4,42 @@
 
 ## 安装
 
+### 方式一：使用 uv（推荐）
+
 ```bash
+# 克隆项目
 git clone https://github.com/ARPO35/py_learn.git
 cd py_learn
+
+# 创建虚拟环境并安装
 uv venv
 uv pip install -e .
 ```
 
-验证安装：
+**激活虚拟环境后**才能使用 `pl` 命令：
+
+| 平台 | 激活命令 |
+|------|----------|
+| Linux / macOS | `source .venv/bin/activate` |
+| Windows (PowerShell) | `.venv\Scripts\Activate.ps1` |
+
+验证环境已激活——终端提示符前出现 `(.venv)` 标识：
 
 ```bash
 pl --help
 ```
+
+> **提示**：每次打开新终端都需要重新激活。也可以用 `uv run pl` 跳过手动激活。
+
+### 方式二：使用 pip（全局安装）
+
+```bash
+git clone https://github.com/ARPO35/py_learn.git
+cd py_learn
+pip install -e .
+```
+
+全局安装后 `pl` 命令在任何终端直接可用，无需激活。
 
 ## 快速开始
 
