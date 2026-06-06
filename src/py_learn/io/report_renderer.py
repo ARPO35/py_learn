@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from rich.console import Console
 from rich.panel import Panel
-from rich.rule import Rule
 from rich.table import Table
 from rich.text import Text
 
@@ -22,8 +21,9 @@ def render_validation_report(
         mode: 模式名称，如 "调试" 或 "提交"。
     """
     for i, result in enumerate(report.results, 1):
+        if i > 1:
+            console.print()
         _render_case(console, result, i, mode)
-
     _render_summary(console, report, mode)
 
 
@@ -72,37 +72,26 @@ def _format_params(result: CaseResult) -> list[str]:
 
 def _render_raw_output(console: Console, result: CaseResult) -> None:
     """渲染程序原始输出区（print 输出、异常 traceback）。"""
-    has_content = False
     parts: list[str] = []
 
     if result.actual_stdout:
-        has_content = True
         parts.append(result.actual_stdout.rstrip("\n"))
 
     if result.traceback:
-        has_content = True
         if parts:
             parts.append("")
         parts.append(f"[red]{result.traceback.rstrip()}[/]")
     elif result.exception and not result.traceback:
-        has_content = True
         if parts:
             parts.append("")
         parts.append(f"[red]异常: {result.exception}[/]")
 
-    if has_content:
+    if parts:
         console.print(
-            Rule("程序原始输出", style="dim", align="left"),
-            "\n".join(parts),
-            "",
+            Panel("\n".join(parts), title="程序原始输出", title_align="left", border_style="dim"),
         )
-    elif result.actual_stdout == "" and not result.exception and not result.traceback:
-        # 无任何输出时也显示，避免用户困惑
-        console.print(
-            Rule("程序原始输出", style="dim", align="left"),
-            "[dim](无输出)[/]",
-            "",
-        )
+    else:
+        console.print("[dim](无输出)[/]")
 
 
 def _render_summary(
