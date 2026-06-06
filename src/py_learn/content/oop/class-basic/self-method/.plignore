@@ -1,0 +1,4 @@
+q.md
+.pl/
+__pycache__/
+*.pyc

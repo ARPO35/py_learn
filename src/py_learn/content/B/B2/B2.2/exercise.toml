@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "B2.2"
+title = "多态与面积计算"
+order = 2
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

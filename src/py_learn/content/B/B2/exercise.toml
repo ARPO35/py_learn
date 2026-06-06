@@ -1,0 +1,7 @@
+type = "chapter"
+
+[chapter]
+id = "B2"
+title = "继承与多态"
+parent = "B"
+order = 2

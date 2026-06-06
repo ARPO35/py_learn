@@ -1,0 +1,7 @@
+type = "chapter"
+
+[chapter]
+id = "B1"
+title = "了解类(class)"
+parent = "B"
+order = 1

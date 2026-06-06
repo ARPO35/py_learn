@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.1"
+title = "返回两个数之和"
+order = 1
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

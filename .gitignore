@@ -1,0 +1,12 @@
+# 忽略 pytest 缓存和 IDE 文件
+.pytest_cache/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/
+.tox/
+.mypy_cache/
+run/

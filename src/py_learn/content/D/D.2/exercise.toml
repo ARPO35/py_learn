@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "D.2"
+title = "列表推导式"
+order = 2
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

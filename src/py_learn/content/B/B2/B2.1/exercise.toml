@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "B2.1"
+title = "简单继承"
+order = 1
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

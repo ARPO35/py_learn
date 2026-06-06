@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "B1.2"
+title = "self 函数"
+order = 2
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

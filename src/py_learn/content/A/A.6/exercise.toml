@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.6"
+title = "字符串回文判断"
+order = 6
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

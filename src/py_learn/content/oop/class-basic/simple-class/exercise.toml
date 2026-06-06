@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "B1.1"
+title = "定义简单类"
+order = 1
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.4"
+title = "for 循环求和"
+order = 4
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"

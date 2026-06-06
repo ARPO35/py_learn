@@ -1,0 +1,9 @@
+type = "exercise"
+
+id = "A.3"
+title = "条件判断"
+order = 3
+
+question = "q.md"
+answer = "a.py"
+cases = "cases.py"
