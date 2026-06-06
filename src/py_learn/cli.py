@@ -48,6 +48,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     # submit
     subparsers.add_parser("submit", help="提交验证")
+    # status
+    subparsers.add_parser("status", help="显示答题目录状态和学习进度")
 
     return parser
 
@@ -93,6 +95,7 @@ def main(argv: list[str] | None = None) -> int:
         handle_run,
         handle_submit,
         handle_next,
+        handle_status,
     )
 
     handlers = {
@@ -103,6 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         "next": lambda: handle_next(args, wm, exercises, workspace_path),
         "run": lambda: handle_run(args, wm, exercises, workspace_path),
         "submit": lambda: handle_submit(args, wm, exercises, workspace_path),
+        "status": lambda: handle_status(args, wm, exercises, chapters, workspace_path),
     }
 
     handler = handlers.get(args.command)

@@ -650,3 +650,102 @@ class TestCLI:
         from py_learn.cli import main
         result = main([])
         assert result == 0
+
+
+# ===== 测试 pl status 命令 =====
+
+
+class TestStatusCommand:
+    """测试 pl status 命令。"""
+
+    def _setup_env(self, tmp_content_dir, tmp_snapshot_dir):
+        """创建含章节和练习的测试环境。"""
+        # 章节 A
+        _make_chapter(
+            tmp_content_dir / "A",
+            'type = "chapter"\n\n[chapter]\nid = "A"\ntitle = "基础"\norder = 1\n',
+        )
+        # 练习 A.1
+        _make_exercise(
+            tmp_content_dir / "A" / "A.1",
+            'type = "exercise"\nid = "A.1"\ntitle = "第一题"\norder = 1\n',
+            files={
+                "q.md": "# A.1",
+                "a.py": "def py_learn():\n    pass\n",
+                "cases.py": "RUN_CASES = []\nSUBMIT_CASES = []\n",
+            },
+        )
+        # 练习 A.2
+        _make_exercise(
+            tmp_content_dir / "A" / "A.2",
+            'type = "exercise"\nid = "A.2"\ntitle = "第二题"\norder = 2\n',
+            files={
+                "q.md": "# A.2",
+                "a.py": "def py_learn():\n    pass\n",
+                "cases.py": "RUN_CASES = []\nSUBMIT_CASES = []\n",
+            },
+        )
+
+        exercises, chapters = build_exercises([tmp_content_dir])
+        store = SnapshotStore(tmp_snapshot_dir)
+        wm = WorkspaceManager(store, exercises)
+        return wm, exercises, chapters
+
+    def test_status_no_exercise(self, tmp_content_dir, tmp_workspace, tmp_snapshot_dir, capsys):
+        """无练习时显示提示。"""
+        from py_learn.commands.status_cmd import handle
+
+        wm, exercises, chapters = self._setup_env(tmp_content_dir, tmp_snapshot_dir)
+        handle(None, wm, exercises, chapters, tmp_workspace)
+
+        captured = capsys.readouterr()
+        assert "当前练习: (无)" in captured.out
+        assert "pl new" in captured.out
+        assert "学习进度" in captured.out
+
+    def test_status_with_exercise_no_snapshot(
+        self, tmp_content_dir, tmp_workspace, tmp_snapshot_dir, capsys
+    ):
+        """有练习但无快照时显示未保存。"""
+        from py_learn.commands.status_cmd import handle
+
+        wm, exercises, chapters = self._setup_env(tmp_content_dir, tmp_snapshot_dir)
+        wm.new("A.1", tmp_workspace)
+
+        handle(None, wm, exercises, chapters, tmp_workspace)
+
+        captured = capsys.readouterr()
+        assert "当前练习: A.1" in captured.out
+        assert "第一题" in captured.out
+        assert "未保存" in captured.out
+        assert "[  ]" in captured.out  # A.1 未完成标记
+        assert "[  ]" in captured.out  # A.2 未完成标记
+
+    def test_status_with_snapshot(
+        self, tmp_content_dir, tmp_workspace, tmp_snapshot_dir, capsys
+    ):
+        """有快照时显示已保存和进度标记。"""
+        from py_learn.commands.status_cmd import handle
+        wm, exercises, chapters = self._setup_env(tmp_content_dir, tmp_snapshot_dir)
+        wm.new("A.1", tmp_workspace)
+        wm.save(tmp_workspace)
+
+        handle(None, wm, exercises, chapters, tmp_workspace)
+
+        captured = capsys.readouterr()
+        assert "已保存" in captured.out
+        assert "[OK] 1. 第一题" in captured.out
+        assert "[  ] 2. 第二题" in captured.out
+        assert "[1/2]" in captured.out
+
+    def test_status_cli_no_args(self, capsys):
+        """CLI status 命令正常返回。"""
+        from py_learn.cli import main
+        result = main(["status"])
+        assert result == 0
+
+    def test_status_help(self, tmp_path):
+        """status --help 应正常。"""
+        from py_learn.cli import main
+        with pytest.raises(SystemExit, match="0"):
+            main(["status", "--help"])

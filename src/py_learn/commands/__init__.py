@@ -7,6 +7,7 @@ from .save import handle as handle_save
 from .run import handle as handle_run
 from .submit import handle as handle_submit
 from .next_cmd import handle as handle_next
+from .status_cmd import handle as handle_status
 
 __all__ = [
     "handle_ls",
@@ -16,4 +17,5 @@ __all__ = [
     "handle_run",
     "handle_submit",
     "handle_next",
+    "handle_status",
 ]
