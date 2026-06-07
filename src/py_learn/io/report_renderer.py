@@ -40,9 +40,14 @@ def _render_case(
     param_lines = _format_params(result)
     if param_lines:
         content_lines.extend(param_lines)
-        content_lines.append("")
 
-    # 判定区：失败原因和耗时
+    # 返回值区
+    divider = "─" * max(20, (console.width or 80) - 4)
+    content_lines.append(f"[dim]{divider}[/]")
+    content_lines.append(f"[bold]返回值[/]: [cyan]{result.actual_return!r}[/]")
+    content_lines.append("")
+
+    # 判定区：失败原因
     if not result.passed:
         for reason in result.failure_reasons:
             content_lines.append(f"[red]{reason}[/]")
